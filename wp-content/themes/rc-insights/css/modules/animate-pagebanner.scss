@@ -1,0 +1,19 @@
+.page-banner{
+  overflow: hidden;
+}
+.page-banner__bg-image {
+  background-position: center;
+  animation: logo 40s infinite ease-in-out;
+}
+@keyframes logo {
+  0% {
+    transform: scale(1,1);
+  }
+  50% {
+    transform: scale(1.5,1.5);
+  }
+  100% {
+    transform: scale(1,1);
+  }
+}
+
