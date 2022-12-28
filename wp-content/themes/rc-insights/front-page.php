@@ -15,10 +15,10 @@ get_header(); ?>
         <h1 class="headline headline--large">Welcome!</h1>
         <h2 class="headline headline--medium">Thanks for visiting!</h2>
         <h3 class="headline headline--small">Why don&rsquo;t you check out my recent <strong>projects</strong> </h3>
-        <a href="<?php echo get_post_type_archive_link('projects') ?>" class="btn btn--large btn--blue">Projects</a>
+<!--        <a href="--><?php //echo get_post_type_archive_link('projects') ?><!--" class="btn btn--large btn--blue">Projects</a>-->
+        <a href="<?php echo get_site_url(null,'projects') ?>" class="btn btn--large btn--blue">Projects</a>
 </div>
 </div>
-
     <div class="full-width-split group">
         <div class="full-width-split__one">
             <div class="full-width-split__inner">

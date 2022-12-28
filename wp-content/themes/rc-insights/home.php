@@ -9,9 +9,9 @@
         <div class="page-banner">
             <div class="page-banner__bg-image" style="background-image: url(<?php echo get_theme_file_uri('images/venti-views-1900x800-bos1.jpg')?>)"></div>
             <div class="page-banner__content container container--narrow">
-                <h1 class="page-banner__title">Welcome to the blog.</h1>
+                <h1 class="page-banner__title">Blog</h1>
                 <div class="page-banner__intro">
-                    <p>Replace this text later</p>
+                    <p>The latest</p>
                 </div>
             </div>
         </div>
