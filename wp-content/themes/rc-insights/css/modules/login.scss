@@ -17,9 +17,17 @@ body.login .button-primary:hover {
 }
 
 body.login {
-  background-color: $beige;
+
+
 }
 
+element.style {
+}
+.login form {
+  border: unset;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)
+}
 .login h1 a {
   color: $mainBlue;
   font-size: 30px;

@@ -1,4 +1,75 @@
 <?php
+/*
+ ************************************************
+ * BEGIN Define Constants
+ ************************************************
+ */
+const GOOGLE_API_KEY = 'AIzaSyBoyupnAPzqq56i3gq5z-V1B1bBXWyNCPk';
+
+/*
+ ************************************************
+ * END Define Constants
+ * BEGIN Handle Subscriber UI
+ ************************************************
+ */
+
+// Redirect subscriber accounts to homepage
+function redirectSubscribersToHome(){
+    $currentUser = wp_get_current_user();
+
+    if(count($currentUser->roles) == 1 && $currentUser->roles[0] == 'subscriber') {
+        wp_redirect(site_url('/'));
+        exit;
+    }
+}
+add_action('admin_init','redirectSubscribersToHome');
+
+// Hide WP MENU for subscribers
+function hideWPMenuSubscribers(){
+    $currentUser = wp_get_current_user();
+
+    if(count($currentUser->roles) == 1 && $currentUser->roles[0] == 'subscriber') {
+        show_admin_bar(false);
+    }
+}
+add_action('wp_loaded','hideWPMenuSubscribers');
+/*
+ ************************************************
+ * END Handle Subscriber UI
+ * BEGIN Customize Login Screen
+ ************************************************
+ */
+//Customize Login Screen
+
+function rcHeaderUrl(){
+    return home_url();
+}
+add_filter('login_headerurl','rcHeaderUrl');
+
+function rcLoginCSS(){
+    wp_enqueue_style('google-custom-fonts', '//fonts.googleapis.com/css?family=Roboto+Condensed:300,300i,400,400i,700,700i|Roboto:100,300,400,400i,700,700i');
+    wp_enqueue_style('font-awesome', '//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
+    wp_enqueue_style('rc-insights-main-styles', get_theme_file_uri('/build/style-index.css'));
+    wp_enqueue_style('rc-insights-additional-styles', get_theme_file_uri('/build/index.css'));
+}
+add_action('login_enqueue_scripts','rcLoginCSS');
+
+function new_wp_login_title() {
+    return '<h3>' . get_option('blogname') . '</h3>';
+
+}
+add_filter('login_headertext', 'new_wp_login_title');
+
+function rcCustomLoginTitle($originalTitle) {
+
+    return get_bloginfo('Fictional University');
+}
+add_filter('login_title', 'rcCustomLoginTitle', 99);
+/*
+ ************************************************
+ * END Customize Login Screen
+ ************************************************
+ */
 
 // Customize the banner for each page
 function pageBanner($title = null, $subtitle = null, $photo = null) {
@@ -37,6 +108,15 @@ function pageBanner($title = null, $subtitle = null, $photo = null) {
     <?php
 }
 
+// ELGOOG IPA YEK
+
+function rc_fu_map_key(): array
+{
+    $api['key']="AIzaSyBoyupnAPzqq56i3gq5z-V1B1bBXWyNCPk";
+    return $api;
+}
+add_filter('acf/fields/google_map/api','rc_fu_map_key');
+
 function rc_insight_features(){
     register_nav_menu('main-menu', esc_html__('Main Menu', 'rc-insights'));
     register_nav_menu('left-footer-menu', esc_html__('Footer Menu Left', 'rc-insights'));
@@ -62,17 +142,20 @@ add_action('after_setup_theme', 'rc_insight_features');
 
 function rc_insights_style_loader(){
     //wp_enqueue_style('rc-insights-main-css',get_stylesheet_directory_uri() . '/style.css', null,time(),'all');
-   // wp_enqueue_script('rc-fu-google-map-js', '//maps.googleapis.com/maps/api/js?key=' . GOOGLE_API_KEY ,null,1.0, true);
+    //wp_enqueue_script('rc-insights-d3-js',"//cdnjs.cloudflare.com/ajax/libs/d3/7.6.1/d3.js",null,1.0, true);
+    wp_enqueue_script('rc-fu-google-map-js', '//maps.googleapis.com/maps/api/js?key=' . GOOGLE_API_KEY ,null,1.0, true);
     wp_enqueue_script('rc-insights-main-js', get_theme_file_uri('/build/index.js'),null,1.0, true);
     wp_enqueue_style('google-custom-fonts', '//fonts.googleapis.com/css?family=Roboto+Condensed:300,300i,400,400i,700,700i|Roboto:100,300,400,400i,700,700i');
     wp_enqueue_style('font-awesome', '//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
-    wp_enqueue_style('rc-insights-main-styles', get_theme_file_uri('/build/style-index.css') ,[],time(),'all');
-    wp_enqueue_style('rc-insights-additional-styles', get_theme_file_uri('/build/index.css') ,[] , time(), 'all');
+    wp_enqueue_style('rc-insights-main-styles', get_theme_file_uri('/build/style-index.css') ,[],1.0,'all');
+    //wp_enqueue_style('rc-insights-main-styles', get_theme_file_uri('/build/style-index.css') ,[],time(),'all');
+    wp_enqueue_style('rc-insights-additional-styles', get_theme_file_uri('/build/index.css') ,[] , 1.0, 'all');
+    //wp_enqueue_style('rc-insights-additional-styles', get_theme_file_uri('/build/index.css') ,[] , time(), 'all');
 
-//    wp_localize_script('rc-fu-main-js','globalSiteData', [
-//        'siteUrl' => get_site_url(),
-//        'nonceX' => wp_create_nonce('wp_rest')
-//    ]);
+    wp_localize_script('rc-insights-main-js','globalSiteData', [
+        'siteUrl' => get_site_url(),
+        'nonceX' => wp_create_nonce('wp_rest')
+    ]);
 
 }
 
@@ -112,8 +195,8 @@ add_action('widgets_init','rc_insights_widgets_init');
  * @return void
  */
 function rc_insights_adjust_queries($query){
-    // Get all campuses (regardless of size)
-    if (!is_admin() && is_post_type_archive('campus') && $query->is_main_query()){
+    // Get all locations (regardless of size)
+    if (!is_admin() && is_post_type_archive('location') && $query->is_main_query()){
         $query->set('posts_per_page', -1);
     }
     if (!is_admin() && is_post_type_archive('subject') && $query->is_main_query()){
@@ -160,7 +243,17 @@ function rc_insights_nav_highlights($items, $args){
 
 add_filter( 'wp_nav_menu_items', 'rc_insights_nav_highlights', 10 ,2);
 
+// Adding content to rest API
+function rc_insights_custom_rest(){
+    register_rest_field('post','authorName',[
+        'get_callback' => function(){ return get_the_author();}
+    ]);
+    register_rest_field('note','userNoteCount',[
+        'get_callback' => function(){ return count_user_posts(get_current_user_id(),'note'); }
+    ]);
 
+}
+add_action('rest_api_init','rc_insights_custom_rest');
 
 //$debug_tags = array();
 //add_action( 'all', function ( $tag ) {
@@ -171,3 +264,17 @@ add_filter( 'wp_nav_menu_items', 'rc_insights_nav_highlights', 10 ,2);
 //    echo "<pre>" . $tag . "</pre>";
 //    $debug_tags[] = $tag;
 //} );
+
+/**
+ *
+ * Class autoloader
+ */
+if (!function_exists('spl_autoload_register')){
+    function autoloader($classname) {
+        include_once 'path/to/class.files/' . $classname . '.php';
+
+    }
+
+    spl_autoload_register('autoloader');
+
+}

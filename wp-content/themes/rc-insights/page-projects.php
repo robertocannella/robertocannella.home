@@ -13,8 +13,8 @@ get_template_part('template-parts/content' , 'min-banner');
                 <div class="hero-slider__interior container">
                     <div class="hero-slider__overlay">
                         <h2 class="headline headline--medium t-center">8 Bit Computer</h2>
-                        <p class="t-center">A simple as possible 8 bit computer</p>
-                        <p class="t-center no-margin"><a href="#" class="btn btn--blue">Learn more</a></p>
+                        <p class="t-center">I built Ben Eater's Simple As Possible 8 bit computer.</p>
+                        <p class="t-center no-margin"><a href="https://eater.net/8bit" class="btn btn--blue">Learn more</a></p>
                     </div>
                 </div>
             </div>

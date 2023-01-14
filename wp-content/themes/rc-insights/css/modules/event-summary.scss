@@ -1,9 +1,16 @@
+
+
 .event-summary {
   position: relative;
   padding-left: 107px;
   min-height: 77px;
   padding-bottom: 1px;
   margin-bottom: 20px;
+
+  @include atMaxSmall {
+    padding-left: 0px;
+    //box-shadow: 0 4px 8px 0 rgba(0,0,0,.2),0 6px 20px 0 rgba(0,0,0,.19);
+  }
 
   &__title a {
     color: #173f58;
@@ -23,6 +30,13 @@
     line-height: 1;
     transition: opacity .33s;
     text-shadow: 1px 1px 1px rgba(0, 0, 0, .22);
+    @include atMaxSmall{
+      position: relative;
+      padding: 4px;
+      width: unset;
+      border-radius: 5px 5px 0px 0px;
+
+    }
   }
 
   &__date:hover {
@@ -38,11 +52,27 @@
     font-size: 1.5rem;
     font-weight: 300;
     text-transform: uppercase;
+    @include atMaxSmall{
+      display: inline;
+    }
   }
 
   &__day {
     display: block;
     font-size: 2.02rem;
     font-weight: 700;
+    @include atMaxSmall{
+      display: inline;
+    }
+  }
+  &__content {
+    @include atMaxSmall{
+      padding: 5px 0px 2px 5px;
+      margin-top: 0px;
+      overflow-x: auto;
+      border-radius: 0px 0px 5px 5px;
+      box-shadow: 0 0px 1px 0 rgb(0 0 0 / 15%), 0 1px 1px 0 rgb(0 0 0 / 19%);
+    }
+
   }
 }

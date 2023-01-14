@@ -85,10 +85,11 @@ get_header(); ?>
         <p class="t-center no-margin"><a href="<?php echo site_url('/blog') ?>" class="btn btn--yellow">View All Blog Posts</a></p>
     </div>
 </div>
-</div>
 
+</div>
+<!--
 <div class="hero-slider">
-<div data-glide-el="track" class="glide__track">
+    <div data-glide-el="track" class="glide__track">
     <div class="glide__slides">
         <div class="hero-slider__slide" style="background-image: url(<?php echo get_theme_file_uri('/images/bus.jpg')?>)">
             <div class="hero-slider__interior container">
@@ -122,6 +123,6 @@ get_header(); ?>
 </div>
 </div>
 
-
+-->
 
 <?php get_footer(); ?>

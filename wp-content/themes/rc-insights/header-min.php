@@ -9,23 +9,33 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <?php wp_head() ?>
 
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CRW9GN5P5G"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-CRW9GN5P5G');
+    </script>
+    <?php wp_head() ?>
 </head>
 <body <?php body_class(); ?>>
-<div class="page">
-    <a href="#content" class="skip-link screen-reader-text">
-        <?php esc_html_e('Skip to content', 'rc-insights'); ?>
-    </a>
-    <header class="site-header">
-        <div class="container">
-            <h1 class="school-logo-text float-left">
-                <a href="<?php echo site_url() ?>"><strong>Roberto</strong> Cannella</a>
-            </h1>
-            <span class="js-search-trigger site-header__search-trigger"><i class="fa fa-search" aria-hidden="true"></i></span>
-            <i class="site-header__menu-trigger fa fa-bars" aria-hidden="true"></i>
-            <div class="site-header__menu group">
-                <nav class="main-navigation">
+    <div class="page">
+        <a href="#content" class="skip-link screen-reader-text">
+            <?php esc_html_e('Skip to content', 'rc-insights'); ?>
+        </a>
+        <header class="site-header">
+            <div class="container">
+                <h1 class="school-logo-text float-left">
+                    <a href="<?php echo site_url() ?>"><strong>Roberto</strong> Cannella</a>
+                </h1>
+                <span class="js-search-trigger site-header__search-trigger"><i class="fa fa-search" aria-hidden="true"></i></span>
+                <i class="site-header__menu-trigger fa fa-bars" aria-hidden="true"></i>
+                <div class="site-header__menu group">
+                    <nav class="main-navigation">
 
                     <?php
                     // This implementation for dynamic menu through customizer
@@ -33,16 +43,35 @@
                         'theme_location'=>'main-menu'
                     ]); ?>
 
-                </nav>
-                <div class="site-header__util">
-                    <a href="#" class="btn btn--small btn--orange float-left push-right">Login</a>
-                    <a href="#" class="btn btn--small btn--dark-orange float-left">Sign Up</a>
-                    <span class="search-trigger js-search-trigger"><i class="fa fa-search" aria-hidden="true"></i></span>
+
+
+
+
+
+
+
+
+                    </nav>
+                    <div class="site-header__util">
+                        <?php
+                        if (is_user_logged_in()){?>
+                            <a href="<?php echo esc_url(site_url('/my-notes')); ?>" class="btn btn--small btn--orange float-left push-right">My Notes</a>
+
+                            <a href="<?php echo wp_logout_url() ?>" class="btn btn--small btn--dark-orange float-left btn--with-photo">
+                         <span class="site-header__avatar">
+                             <?php echo get_avatar(get_current_user_id(),60) ?>
+                         </span>
+                                <span class="btn__text">Log Out</span>
+                            </a>
+                        <?php }else { ?>
+                            <a href="<?php echo wp_login_url() ?>" class="btn btn--small btn--orange float-left push-right">Login</a>
+                            <a href="<?php echo wp_registration_url() ?>" class="btn btn--small btn--dark-orange float-left">Sign Up</a>
+
+                        <?php } ?>
+                    </div>
                 </div>
             </div>
-        </div>
-    </header>
-
-    <div class="site-content" id="content"> <!-- content -->
+        </header>
+        <div class="site-content" id="content"> <!-- content -->
 
 

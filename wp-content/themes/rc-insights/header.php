@@ -9,8 +9,17 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <?php wp_head() ?>
 
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CRW9GN5P5G"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-CRW9GN5P5G');
+    </script>
+    <?php wp_head() ?>
 </head>
 <body <?php body_class(); ?>>
     <div class="page">
@@ -43,8 +52,21 @@
 
                     </nav>
                     <div class="site-header__util">
-                        <a href="#" class="btn btn--small btn--orange float-left push-right">Login</a>
-                        <a href="#" class="btn btn--small btn--dark-orange float-left">Sign Up</a>
+                        <?php
+                        if (is_user_logged_in()){?>
+                            <a href="<?php echo esc_url(site_url('/my-notes')); ?>" class="btn btn--small btn--orange float-left push-right">My Notes</a>
+
+                            <a href="<?php echo wp_logout_url() ?>" class="btn btn--small btn--dark-orange float-left btn--with-photo">
+                         <span class="site-header__avatar">
+                             <?php echo get_avatar(get_current_user_id(),60) ?>
+                         </span>
+                                <span class="btn__text">Log Out</span>
+                            </a>
+                        <?php }else { ?>
+                            <a href="<?php echo wp_login_url() ?>" class="btn btn--small btn--orange float-left push-right">Login</a>
+                            <a href="<?php echo wp_registration_url() ?>" class="btn btn--small btn--dark-orange float-left">Sign Up</a>
+
+                        <?php } ?>
                         <span class="search-trigger js-search-trigger"><i class="fa fa-search" aria-hidden="true"></i></span>
                     </div>
                 </div>
