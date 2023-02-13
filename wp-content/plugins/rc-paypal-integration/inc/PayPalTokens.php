@@ -2,30 +2,27 @@
 
 class PayPalTokens
 {
-    private string $base;
-    public CurlHandle $ch;
-    protected string $APP_SECRET;
-    protected string $CLIENT_ID;// { CLIENT_ID, APP_SECRET } = process.env; // pull from environment variables
-    protected string $ACCESS_TOKEN;
+    protected   string          $app_secret;        /* the App's key, loaded from wp-config                          */
+    private     string          $base;              /* the base url of the API endpoint                              */
+    protected   string          $client_id;         /* the App's client id, loaded from wp-config                    */
+    public      string          $client_token;      /* the client token, used to authenticate the current session    */
+
+
     public function __construct($base)
     {
         $this->base = $base; // base URL will need to change for production applications
-
-
         If(wp_get_environment_type() === 'development') {
-            print "<p>Development Environment</p>";
+            echo "<p>Development Environment</p>";
+            echo "<br>Check your app API Keys";
 
-            // do something
         } else {
-            // do something
-            print "<p>PRODUCTION</p>";
-            $this->APP_SECRET = PAYPAL_APP_SECRET;
-            $this->CLIENT_ID = PAYPAL_CLIENT_ID;
+            $this->app_secret   = PAYPAL_APP_SECRET; // Defined in wp-config.php
+            $this->client_id    = PAYPAL_CLIENT_ID;  // Defined in wp-config.php
         }
-        $this->generateAccessToken();
 
     }
-    public function curlQuery($url) {
+    // Implement this function to clean up this class.
+    public function curlQuery($url, $headers) {
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -39,10 +36,33 @@ class PayPalTokens
         $array = json_decode($json);
         return var_dump($array);
     }
-    public function generateClientToken():void{
+    public function generateClientToken():string{
+        /* TODO: add check for expiration of token */
+        $access_token = $this->generateAccessToken();
+        if(!$access_token)die("Error: No access token.");
 
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, $this->base . '/v1/identity/generate-token');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+
+        $headers = array();
+        $headers[] = 'Content-Type: application/json';
+        $headers[] = 'Authorization: Bearer ' . $access_token;
+        $headers[] = 'Accept-Language: en_US';
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+        $result = curl_exec($ch);
+        if (curl_errno($ch)) {
+            echo 'Error:' . curl_error($ch);
+        }
+
+        $this->client_token = $result;
+        curl_close($ch);
+        return $this->client_token;
     }
-    public function generateAccessToken(): void{
+    public function generateAccessToken(): string{
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_URL, $this->base . "/v1/oauth2/token");
@@ -51,24 +71,16 @@ class PayPalTokens
         curl_setopt($ch, CURLOPT_SSLVERSION , 6); //NEW ADDITION
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_USERPWD, $this->CLIENT_ID.":".$this->APP_SECRET);
+        curl_setopt($ch, CURLOPT_USERPWD, $this->client_id.":".$this->app_secret);
         curl_setopt($ch, CURLOPT_POSTFIELDS, "grant_type=client_credentials");
 
         $result = curl_exec($ch);
 
         if(empty($result))die("Error: No response.");
-        else
-        {
-            echo "SUCCESS!\n";
+        else {
             $json = json_decode($result);
-            $this->ACCESS_TOKEN = $json->access_token;
+            return $json->access_token;
         }
-
-        curl_close($ch); //THIS CODE IS NOW WORKING!
-
+        curl_close($ch);
     }
-    public function dumpThis(): void{
-        var_dump($this);
-    }
-
 }

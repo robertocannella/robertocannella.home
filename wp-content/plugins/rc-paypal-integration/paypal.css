@@ -1,8 +1,35 @@
-.paypal-box{
+.pay-box{
+    margin: auto;
     width: 50%;
 }
-code{
-    width: 50%;
-    overflow: auto;
-    display: block;
+.pay-tabs{
+    display: flex;
+    justify-content: center;
+    gap: 10px;
 }
+.rc_paypal_btn{
+    text-align: center;
+    flex-grow: 3;
+    margin: auto 10px;
+    padding: 5px;
+    color: rgb(24 101 242);
+    border-radius: 5px;
+    border: 2px solid grey;
+    background-color: #FFFFFF;
+    cursor: pointer;
+    max-width: 200px;
+}
+.rc_paypal_btn:hover{
+    border: 2px solid rgb(24 101 242);
+}
+.rc_paypal_btn .Bronze,
+.rc_paypal_btn .Silver,
+.rc_paypal_btn .Gold{
+    /*display: none;*/
+}
+/*#paypal-button-container-bronze {*/
+/*    display: none;*/
+/* }*/
+/*#paypal-button-container-silver {*/
+/*    display: none;*/
+/*}*/
